@@ -1,63 +1,61 @@
+// require letter objects
 var letter = require('./letter.js');
+//--------------------------------------------
+function Word(wrd) {
+    var that = this;
 
-//-----Function #1 ------
-var Word = function(wrd){
-	var that = this;
+//store the string wrd
+  this.word = wrd;
 
-	//properties 
+  //collection of letter objects
+  this.letters = [];
+  this.wordFind = false;
+//--------------------------------------------
+//Method that grabs the letter in the word.
+  this.grabLetters = function() {
+    //populate the collection above with new Letter objects
+    for(var i = 0; i<that.word.length; i++){
+      var newLetter = new letter(that.word[i]);
+      this.letters.push(newLetter);
+    }
+  };
+//--------------------------------------------
+  //Method that finds the letter in the guess array
+  this.foundtheWord = function() {
+    if(this.letters.every(function(ltr){
+      return ltr.show === true;
+    })){
+      this.wordFind = true;
+      return true;
+    }
 
-	this.word = wrd;
-	this.letters = [];
-	this.wordFind = false;
+  };
+  //-------------------------------------------
+  //Method that compares the letter in the word with the letter input
+  this.foundTheLetter = function(guessedLetter) {
+    var whatToReturn = 0;
+    //iterates through each letter to see if it matches the guessed letter
+    this.letters.forEach(function(ltr){
+      if(ltr.letter === guessedLetter){
+        ltr.show = true;
+        whatToReturn++;
+      }
+    })
+    //if guessLetter matches Letter property, the letter object should be shown
+    return whatToReturn;
+  };
 
-	//method to grab a letter in a word.
-	this.grabLetters = function(){
-		for(var i = 0; i < that.word.length; i++){
-			var newLetter = new letter(that.word[i]);
-			this.letters.push(newLetter);
-		}
-	};
-	//this.grabLetters();
+  //------------------------------------------
+  //Method that display the word whether the letters in the word are found or not
+  this.wordRender = function() {
+    var display = '';
+    that.letters.forEach(function(ltr){
+      var currentLetter = ltr.letterin();
+      display+= currentLetter;
+    });
 
-//-----Function #2 -----
-this.foundtheWord = function(){
-	if(this.letters.every(function(ltr){
-		return ltr.show === true;
-	})) {
-		this.wordFind = true;
-		return true;
-	}
-};
-
-
-// Function will find the letter in the array of guesses
-this.foundTheLetter = function(letterGuessed){
-	var whatToReturn = 0;
-
-	//goes through each letter to see if matches guess letter
-	this.letters.forEach(function(ltr){
-		if(ltr.letter === letterGuessed){
-			ltr.show = true
-			whatToReturn++;
-		}
-	})
-	//If guessed letter matches letter property show letter object
-	return whatToReturn;
-};
-	
-
-
-
-this.wordRender = function() {
-var display ='';
-
-that.letters.forEach(function(ltr){
-	var currentLetter = ltr.letterin();
-	display += currentLetter;
-});
-	return display;
-	};
+    return display;
+  };
 }
-
 
 module.exports = Word;
